@@ -1,11 +1,12 @@
-package com.example.mvvminstagram
+package com.example.mvvminstagram.login
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.mvvminstagram.R
 
-class LoginActivity : AppCompatActivity() {
+class InputNumberActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_input_number)
     }
 }

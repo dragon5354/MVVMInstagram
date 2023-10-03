@@ -8,8 +8,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.mvvminstagram.R
 import com.example.mvvminstagram.databinding.ActivityLoginBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
+    // 회원가입을 관리하는 변수
+    lateinit var auth : FirebaseAuth
     // 바인딩
     lateinit var binding : ActivityLoginBinding
     // 뷰모델 클래스 선언
@@ -22,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
         binding.viewModel = loginViewModel
         binding.activity = this
         binding.lifecycleOwner = this
-
+        auth = FirebaseAuth.getInstance()
         setObserve()
     }
     // 실제로 뷰모델의 값이 변환될 때 Activity가 뜰 수 있도록 하는 함수
@@ -46,9 +49,22 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
-    fun loginEmail() {
+    fun loginWithSignupEmail() {
         println("Email")
-        loginViewModel.showInputNumberActivity.value = true
+        auth.createUserWithEmailAndPassword(
+            loginViewModel.id.value.toString(),
+            loginViewModel.password.value.toString()
+        ).addOnCompleteListener {
+            // 정상적으로 회원가입할 때
+            if(it.isSuccessful) {
+                loginViewModel.showInputNumberActivity.value = true
+            }
+            // 회원가입이 실패했을 때
+            else {
+                // 아이디가 있을 경우
+
+            }
+        }
     }
     fun findId() {
         println("findId")

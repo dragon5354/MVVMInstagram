@@ -6,6 +6,6 @@
 
 ## References
 
-도서 '안드로이드 Kotlin 앱 프로그래밍 가이드'
+도서 '안드로이드 Kotlin 앱 프로그래밍 가이드'<br/>
 유튜브 https://www.youtube.com/playlist?list=PLmdU__e_zPf_mEAjwGETH59aB8fLiK2eV
 

@@ -7,9 +7,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mvvminstagram.R
+import com.facebook.AccessToken
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
@@ -63,6 +65,20 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     }
     fun firebaseAuthWithGoogle(idToken: String?) {
         val credential = GoogleAuthProvider.getCredential(idToken,null)
+        auth.signInWithCredential(credential).addOnCompleteListener {
+            // 정상적으로 회원가입할 때
+            if(it.isSuccessful) {
+                showInputNumberActivity.value = true
+            }
+            // 회원가입이 실패했을 때
+            else {
+                // 아이디가 있을 경우
+
+            }
+        }
+    }
+    fun firebaseAuthWithFacebook(accessToken: AccessToken) {
+        val credential = FacebookAuthProvider.getCredential(accessToken.token)
         auth.signInWithCredential(credential).addOnCompleteListener {
             // 정상적으로 회원가입할 때
             if(it.isSuccessful) {

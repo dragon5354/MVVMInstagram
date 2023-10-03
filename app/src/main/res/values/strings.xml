@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">MVVMInstagram</string>
 
-    <string name="facebook_app_id">397161661812167</string>
-    <string name="fb_login_protocol_scheme">fb397161661812167</string>
-
+    <!-- facebook login -->
+    <string name="facebook_app_id">341638575101772</string>
+    <string name="fb_login_protocol_scheme">fb227c95e15616a0e6bebf955c10c058f3</string>
+    <string name="facebook_client_token">227c95e15616a0e6bebf955c10c058f3</string>
 
     <!-- Sign In -->
     <string name="email">Email</string>

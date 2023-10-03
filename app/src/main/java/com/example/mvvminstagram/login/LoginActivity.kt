@@ -1,19 +1,34 @@
 package com.example.mvvminstagram.login
 
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import com.example.mvvminstagram.R
 import com.example.mvvminstagram.databinding.ActivityLoginBinding
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginBehavior
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.FirebaseAuth
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import java.util.Arrays
+
 
 class LoginActivity : AppCompatActivity() {
+    lateinit var  callbackManager: CallbackManager
+
+    val TAG = "LoginActivity"
     // 바인딩
     lateinit var binding : ActivityLoginBinding
     // 뷰모델 클래스 선언
@@ -26,8 +41,55 @@ class LoginActivity : AppCompatActivity() {
         binding.viewModel = loginViewModel
         binding.activity = this
         binding.lifecycleOwner = this
+        callbackManager = CallbackManager.Factory.create()
         setObserve()
+        printHashKey(this)
     }
+
+    fun loginFacebook() {
+        var loginManager = LoginManager.getInstance()
+        loginManager.loginBehavior = LoginBehavior.WEB_ONLY
+        loginManager.logInWithReadPermissions(this, Arrays.asList("email"))
+        loginManager.registerCallback(callbackManager,object : FacebookCallback<LoginResult>{
+            override fun onCancel() {
+
+            }
+
+            override fun onError(error: FacebookException) {
+
+            }
+
+            override fun onSuccess(result: LoginResult) {
+                val token = result.accessToken
+                loginViewModel.firebaseAuthWithFacebook(token)
+
+            }
+
+        })
+
+    }
+
+    // 페이스북 로그인용 해시코드
+    fun printHashKey(pContext: Context) {
+        try {
+            val info = pContext.packageManager.getPackageInfo(
+                pContext.packageName,
+                PackageManager.GET_SIGNATURES
+            )
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val hashKey = String(Base64.encode(md.digest(), 0))
+                Log.i(TAG, "printHashKey() Hash Key: $hashKey")
+            }
+        } catch (e: NoSuchAlgorithmException) {
+            Log.e(TAG, "printHashKey()", e)
+        } catch (e: Exception) {
+            Log.e(TAG, "printHashKey()", e)
+        }
+    }
+
+
     // 실제로 뷰모델의 값이 변환될 때 Activity가 뜰 수 있도록 하는 함수
     fun setObserve() {
         loginViewModel.showInputNumberActivity.observe(this) {
@@ -64,5 +126,10 @@ class LoginActivity : AppCompatActivity() {
         val account = task.getResult(ApiException::class.java)
         account.idToken // 로그인한 사용자 정보를 암호화한 값
         loginViewModel.firebaseAuthWithGoogle(account.idToken)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 }

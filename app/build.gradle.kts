@@ -59,4 +59,7 @@ dependencies {
 
     // 구글 로그인 부분
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+    // 페이스북 로그인 부분
+    implementation("com.facebook.android:facebook-android-sdk:12.3.0")
 }

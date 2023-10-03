@@ -56,4 +56,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx:22.1.2")
+
+    // 구글 로그인 부분
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 }
